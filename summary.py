@@ -6,7 +6,9 @@ import os
 # openaikey = os.getenv('OPENAI_API_KEY')
 # if not openaikey:
 #     raise ValueError("OPENAI_API_KEY environment variable is not set.")
-# client = OpenAI(api_key=openaikey)   
+# client = OpenAI(api_key=openaikey)  
+
+
 
 def summarize_text_from_input(text):
         system_prompt = "I would like for you to assume the role of a teacher"
@@ -21,7 +23,7 @@ def summarize_text_from_input(text):
 
         print('summarizing ... ')
         try:
-            # Use the initialized client to create the chat completion
+            
             response = client.chat.completions.create(
                 model='gpt-4o-mini',
                 messages=[
