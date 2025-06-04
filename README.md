@@ -48,11 +48,11 @@ This project provides a way to automatically generate summaries of YouTube video
 
     This will read the transcript from `transcription.txt`, generate a summary using the OpenAI API, and save the summary to `summary.txt`.
 
-3. ## Run the Application
+3. **Run the Application**
 
-```bash
- streamlit run app.py 
-```
+    ```bash
+     streamlit run app.py 
+    ```
 
 The app will run on http://127.0.0.1:5000 by default.
 ## Error Handling
