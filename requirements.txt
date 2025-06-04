@@ -1,0 +1,4 @@
+openai
+yt-dlp
+whisper
+# -U openai-whisper
