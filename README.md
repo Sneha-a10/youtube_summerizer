@@ -54,7 +54,7 @@ This project provides a way to automatically generate summaries of YouTube video
      streamlit run app.py 
     ```
 
-The app will run on http://127.0.0.1:5000 by default.
+    The app will run on http://127.0.0.1:5000 by default.
 ## Error Handling
 
 The scripts include error logging to `error.log`. If any errors occur during the execution, they will be logged in this file. The `Transcription.py` script also includes a retry mechanism for fetching the transcript from YouTube.
