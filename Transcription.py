@@ -1,5 +1,12 @@
 from pytube import extract
 from youtube_transcript_api import YouTubeTranscriptApi
+import logging
+import time
+import traceback
+
+# Configure logging
+logging.basicConfig(filename='error.log', level=logging.ERROR,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 def get_youtube_id_pytube(url):
     """
@@ -9,23 +16,59 @@ def get_youtube_id_pytube(url):
         video_id = extract.video_id(url)
         return video_id
     except Exception as e:
+        logging.error(f"Error extracting ID with pytube: {e}")
         print(f"Error extracting ID with pytube: {e}")
         return None
 
+def get_transcript(video_id, max_retries=3, initial_delay=1):
+    """
+    Fetches the transcript for a given video ID with retry logic.
+    """
+    for attempt in range(max_retries):
+        try:
+            transcript = YouTubeTranscriptApi.get_transcript(video_id)
+            return transcript
+        except Exception as e:
+            logging.error(f"Attempt {attempt + 1} failed to get transcript for video ID {video_id}: {e}")
+            print(f"Attempt {attempt + 1} failed to get transcript for video ID {video_id}: {e}")
+            if attempt < max_retries - 1:
+                delay = initial_delay * (2 ** attempt)
+                print(f"Retrying in {delay} seconds...")
+                time.sleep(delay)
+            else:
+                logging.error(f"Max retries reached. Could not retrieve transcript.\n{traceback.format_exc()}")
+                print("Could not retrieve transcript after multiple retries.")
+                return None
+    return None
 
-url = 'https://youtu.be/LI57EB_T38c?si=o3tQVSdDKPhY18WP'
-video_id = get_youtube_id_pytube(url)
-if video_id:
-    print(f"URL: {url} -> Video ID: {video_id}")
-    transcript = YouTubeTranscriptApi.get_transcript(video_id)
-    
-    with open('transcription.txt', 'w', encoding='utf-8') as f:
-        for entry in transcript:
-            f.write(entry['text'] + '\n')
-            
-    print("Transcript saved to transcription.txt")
-else:
-    print(f"Could not extract video ID from URL: {url}")
+def save_transcript_to_file(transcript, filename='transcription.txt'):
+    """
+    Saves the transcript to a file.
+    """
+    try:
+        with open(filename, 'w', encoding='utf-8') as f:
+            for entry in transcript:
+                f.write(entry['text'] + '\n')
+        print(f"Transcript saved to {filename}")
+    except Exception as e:
+        logging.error(f"Error saving transcript to {filename}: {e}")
+        print(f"Error saving transcript to {filename}: {e}")
+
+def main():
+    url = 'https://youtu.be/LI57EB_T38c?si=o3tQVSdDKPhY18WP'
+    video_id = get_youtube_id_pytube(url)
+    if video_id:
+        print(f"URL: {url} -> Video ID: {video_id}")
+        transcript = get_transcript(video_id)
+        if transcript:
+            save_transcript_to_file(transcript)
+        else:
+            print("Could not retrieve transcript. Skipping summarization.")
+    else:
+        print(f"Could not extract video ID from URL: {url}")
+
+if __name__ == "__main__":
+    main()
 
 
 

@@ -2,3 +2,6 @@
 .env
 output/
 transcription.txt
+error.log
+summary.txt
+__pycache__/

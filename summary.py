@@ -1,14 +1,12 @@
 from openai import OpenAI
-import dotenv
-import os
+# import dotenv
+# import os
 
 # dotenv.load_dotenv()    
 # openaikey = os.getenv('OPENAI_API_KEY')
 # if not openaikey:
 #     raise ValueError("OPENAI_API_KEY environment variable is not set.")
 # client = OpenAI(api_key=openaikey)  
-
-
 
 def summarize_text_from_input(text):
         system_prompt = "I would like for you to assume the role of a teacher"
@@ -38,23 +36,53 @@ def summarize_text_from_input(text):
         except Exception as e:
             print(f"An error occurred: {e}")
             return "Error during summarization."
-
-def main():
+        
+def create_summary_file(transcript_filename='transcription.txt', summary_filename='summary.txt'):
+    """
+    Reads the transcript from a file, generates a summary, and saves it to another file.
+    """
     try:
-        with open('transcription.txt', 'r') as file:
+        with open(transcript_filename, 'r', encoding='utf-8') as file:
             text = file.read()
-        
+
         if not text:
-            print("The file is empty.")
-            return
-        
+            print("The transcription file is empty.")
+            return False
+
         summary = summarize_text_from_input(text)
-        print("Summary: ", summary)
-    
+
+        with open(summary_filename, 'w', encoding='utf-8') as outfile:
+            outfile.write(summary)
+
+        print(f"Summary saved to {summary_filename}")
+        return True
+
     except FileNotFoundError:
-        print("Error: transcription.txt not found.")
+        print(f"Error: {transcript_filename} not found.")
+        return False
     except Exception as e:
         print(f"An error occurred: {e}")
+        return False
+
+# def main():
+#     try:
+#         with open('transcription.txt', 'r') as file:
+#             text = file.read()
+        
+#         if not text:
+#             print("The file is empty.")
+#             return
+        
+#         summary = summarize_text_from_input(text)
+#         print("Summary: ", summary)
+    
+#     except FileNotFoundError:
+#         print("Error: transcription.txt not found.")
+#     except Exception as e:
+#         print(f"An error occurred: {e}")
+
+def main():
+    create_summary_file()
 
 if __name__ == "__main__":
     main()
