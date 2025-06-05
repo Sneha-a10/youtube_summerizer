@@ -1,12 +1,16 @@
 from openai import OpenAI
+import os
+from transcription import get_transcript
+
 # import dotenv
-# import os
 
 # dotenv.load_dotenv()    
 # openaikey = os.getenv('OPENAI_API_KEY')
 # if not openaikey:
 #     raise ValueError("OPENAI_API_KEY environment variable is not set.")
 # client = OpenAI(api_key=openaikey)  
+
+
 
 def summarize_text_from_input(text):
         system_prompt = "I would like for you to assume the role of a teacher"
@@ -37,11 +41,16 @@ def summarize_text_from_input(text):
             print(f"An error occurred: {e}")
             return "Error during summarization."
         
-def create_summary_file(transcript_filename='transcription.txt', summary_filename='summary.txt'):
+def create_summary_file(url, transcript_filename='transcription.txt', summary_filename='summary.txt',):
     """
     Reads the transcript from a file, generates a summary, and saves it to another file.
     """
+    if os.path.exists(summary_filename):
+        print(f"{summary_filename} already exists. Skipping summarization.")
+        return True
+
     try:
+        get_transcript(url)
         with open(transcript_filename, 'r', encoding='utf-8') as file:
             text = file.read()
 
@@ -64,22 +73,6 @@ def create_summary_file(transcript_filename='transcription.txt', summary_filenam
         print(f"An error occurred: {e}")
         return False
 
-# def main():
-#     try:
-#         with open('transcription.txt', 'r') as file:
-#             text = file.read()
-        
-#         if not text:
-#             print("The file is empty.")
-#             return
-        
-#         summary = summarize_text_from_input(text)
-#         print("Summary: ", summary)
-    
-#     except FileNotFoundError:
-#         print("Error: transcription.txt not found.")
-#     except Exception as e:
-#         print(f"An error occurred: {e}")
 
 def main():
     create_summary_file()

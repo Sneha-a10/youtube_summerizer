@@ -1,3 +1,4 @@
+import os
 from pytube import extract
 from youtube_transcript_api import YouTubeTranscriptApi
 import logging
@@ -20,13 +21,20 @@ def get_youtube_id_pytube(url):
         print(f"Error extracting ID with pytube: {e}")
         return None
 
-def get_transcript(video_id, max_retries=3, initial_delay=1):
+def get_transcript(url, max_retries=3, initial_delay=1, filename='transcription.txt'):
     """
     Fetches the transcript for a given video ID with retry logic.
+    Saves the transcript to a file if it doesn't already exist.
     """
+    if os.path.exists(filename):
+        print(f"{filename} already exists. Skipping transcript retrieval.")
+        return None 
+
+    video_id = get_youtube_id_pytube(url)
     for attempt in range(max_retries):
         try:
             transcript = YouTubeTranscriptApi.get_transcript(video_id)
+            save_transcript_to_file(transcript, filename)  # Save the transcript here
             return transcript
         except Exception as e:
             logging.error(f"Attempt {attempt + 1} failed to get transcript for video ID {video_id}: {e}")
@@ -61,7 +69,7 @@ def main():
         print(f"URL: {url} -> Video ID: {video_id}")
         transcript = get_transcript(video_id)
         if transcript:
-            save_transcript_to_file(transcript)
+            pass
         else:
             print("Could not retrieve transcript. Skipping summarization.")
     else:
