@@ -178,16 +178,19 @@ def main():
     url = st.text_input("", placeholder="https://www.youtube.com/watch?v=...", label_visibility="collapsed")
 
     # Buttons
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
 
     with col1:
         transcript_btn = st.button("Get Transcription", key="transcript")
 
     with col2:
+        chat_btn = st.button("Chat with Video", key="chat")
+
+    with col3:
         summary_btn = st.button("Get Summary", key="summary")
 
     # Processing
-    if transcript_btn or summary_btn:
+    if transcript_btn or summary_btn or chat_btn:
         if not url:
             st.markdown("""
             <div class="error-container">
@@ -242,6 +245,9 @@ def main():
                                 <p class="error-content">Could not get transcription. Video may not have captions available.</p>
                             </div>
                             """, unsafe_allow_html=True)
+                
+                if chat_btn:
+                    st.write("Chat functionality will be implemented here.")
 
                 elif summary_btn:
                     with st.spinner("Generating summary..."):

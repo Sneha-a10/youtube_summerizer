@@ -47,8 +47,8 @@ def save_transcript_to_file(transcript, filename='transcription.txt'):
     """
     try:
         with open(filename, 'w', encoding='utf-8') as f:
-            for entry in transcript:
-                f.write(entry['text'] + '\n')
+            text = ' '.join(entry['text'] for entry in transcript)
+            f.write(text)
         print(f"Transcript saved to {filename}")
     except Exception as e:
         logging.error(f"Error saving transcript to {filename}: {e}")
