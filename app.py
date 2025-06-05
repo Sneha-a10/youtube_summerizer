@@ -1,7 +1,7 @@
 import streamlit as st
 import os
-from transcription import get_youtube_id_pytube, get_transcript, save_transcript_to_file
-from summary import create_summary_file
+from backend.transcription import get_youtube_id_pytube, get_transcript, save_transcript_to_file
+from backend.summary import create_summary_file
 
 # Page config
 st.set_page_config(
@@ -219,6 +219,15 @@ def main():
                                     
                                 st.text_area("", value=transcript_text, height=300, label_visibility="collapsed")
 
+                                # Add download button for transcription
+                                with open('transcription.txt', 'r', encoding='utf-8') as f:
+                                    st.download_button(
+                                        label="Download Transcription",
+                                        data=f,
+                                        file_name="transcription.txt",
+                                        mime="text/plain",
+                                    )
+
                             except FileNotFoundError:
                                 st.markdown("""
                                 <div class="error-container">
@@ -249,6 +258,15 @@ def main():
                                         summary = summary_file.read()
 
                                     st.markdown(summary)
+
+                                    # Add download button for summary
+                                    with open('summary.txt', 'r', encoding='utf-8') as f:
+                                        st.download_button(
+                                            label="Download Summary",
+                                            data=f,
+                                            file_name="summary.txt",
+                                            mime="text/plain",
+                                        )
 
                                 except FileNotFoundError:
                                     st.markdown("""

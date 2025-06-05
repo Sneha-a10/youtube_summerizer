@@ -8,6 +8,7 @@ from openai import OpenAI
 #     raise ValueError("OPENAI_API_KEY environment variable is not set.")
 # client = OpenAI(api_key=openaikey)  
 
+
 def summarize_text_from_input(text):
         system_prompt = "I would like for you to assume the role of a teacher"
         user_prompt = f"""Generate a concise summary of the text below.
