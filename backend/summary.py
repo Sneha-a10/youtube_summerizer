@@ -1,6 +1,6 @@
 from openai import OpenAI
 import os
-from transcription import get_transcript
+from .transcription import get_transcript
 
 # import dotenv
 
@@ -9,7 +9,6 @@ from transcription import get_transcript
 # if not openaikey:
 #     raise ValueError("OPENAI_API_KEY environment variable is not set.")
 # client = OpenAI(api_key=openaikey)  
-
 
 
 def summarize_text_from_input(text):
